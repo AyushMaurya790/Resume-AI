@@ -1,0 +1,113 @@
+/* PreviewPane.css */
+
+.preview-container {
+  padding: 2rem;
+  background-color: #f0f4f8;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.preview-actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.resume-preview {
+  position: relative;
+  background: #fff;
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.resume-content {
+  font-family: 'Inter', sans-serif;
+  color: #333;
+}
+
+.resume-header {
+  text-align: center;
+  border-bottom: 2px solid #ccc;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+}
+
+.resume-header h1 {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.resume-header p {
+  font-size: 1.1rem;
+  margin-top: 0.5rem;
+  color: #555;
+}
+
+.resume-section {
+  margin-bottom: 2rem;
+}
+
+.resume-section h2 {
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid #3e6bff;
+  padding-left: 0.5rem;
+  color: #3e6bff;
+}
+
+.experience-item {
+  margin-bottom: 1.2rem;
+}
+
+.experience-item h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.experience-item p {
+  margin: 0.3rem 0;
+  color: #444;
+}
+
+/* Watermark Overlay */
+.watermark-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.7);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.watermark-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #d32f2f;
+  text-align: center;
+  transform: rotate(-15deg);
+  opacity: 0.7;
+}
+
+/* Payment Modal */
+.payment-modal .MuiBackdrop-root {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.payment-modal-content {
+  background: #fff;
+  padding: 2rem;
+  width: 90%;
+  max-width: 400px;
+  margin: 10% auto;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  outline: none;
+}

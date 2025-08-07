@@ -1,0 +1,87 @@
+/* Loader Styles */
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: rgba(255, 255, 255, 0.9);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+}
+
+.loader {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.loader-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  animation: bounce 1.5s infinite ease-in-out;
+}
+
+.loader-circle.red {
+  background-color: var(--primary-red);
+}
+
+.loader-circle.blue {
+  background-color: var(--primary-blue);
+}
+
+.loader-circle:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.loader-circle:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.loader-circle:nth-child(4) {
+  animation-delay: 0.6s;
+}
+
+.loader-text {
+  font-size: 1.2rem;
+  color: var(--text-dark);
+  font-weight: 500;
+}
+
+.small-loader {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.small-loader-circle {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  animation: bounce 1.5s infinite ease-in-out;
+}
+
+.small-loader-circle.red {
+  background-color: var(--primary-red);
+}
+
+.small-loader-circle.blue {
+  background-color: var(--primary-blue);
+}
+
+.small-loader-circle:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}

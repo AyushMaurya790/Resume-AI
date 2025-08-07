@@ -1,0 +1,52 @@
+/* src/pages/PricingStyles.css */
+.pricing-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px;
+  min-height: 100vh;
+  background: #f8fafc; /* Matches App.js theme */
+}
+
+.MuiTypography-h2 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  color: #3e6bff; /* Primary color from App.js */
+  margin-bottom: 16px;
+}
+
+.MuiTypography-body1 {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.2rem;
+  color: #4b5563;
+  margin-bottom: 24px;
+}
+
+.MuiButton-contained {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  text-transform: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  background: #3e6bff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.MuiButton-contained:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(62, 107, 255, 0.3);
+}
+
+@media (max-width: 600px) {
+  .pricing-container {
+    padding: 16px;
+  }
+
+  .MuiTypography-h2 {
+    font-size: 2rem;
+  }
+
+  .MuiButton-contained {
+    padding: 10px 16px;
+  }
+}

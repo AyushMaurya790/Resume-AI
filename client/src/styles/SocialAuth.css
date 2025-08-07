@@ -1,0 +1,105 @@
+/* src/styles/SocialAuthStyles.css */
+
+/* Container for the social auth section */
+.social-auth-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 16px;
+  margin-top: 20px;
+}
+
+/* Typography for "Or login with" */
+.MuiTypography-body1 {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #4b5563; /* Neutral gray for text */
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+/* Container for social buttons */
+.social-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 360px;
+}
+
+/* Material-UI Button overrides */
+.MuiButton-outlined {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  text-transform: none;
+  border-radius: 8px;
+  padding: 12px 16px;
+  border-width: 2px;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Google button */
+.MuiButton-outlined[style*="color: #DB4437"] {
+  border-color: #DB4437; /* Google red */
+  color: #DB4437;
+}
+
+.MuiButton-outlined[style*="color: #DB4437"]:hover {
+  background: rgba(219, 68, 55, 0.1); /* Light red background on hover */
+  border-color: #c13531;
+  transform: scale(1.03);
+  box-shadow: 0 2px 8px rgba(219, 68, 55, 0.2);
+}
+
+/* LinkedIn button */
+.MuiButton-outlined[style*="color: #0077B5"] {
+  border-color: #0077B5; /* LinkedIn blue */
+  color: #0077B5;
+}
+
+.MuiButton-outlined[style*="color: #0077B5"]:hover {
+  background: rgba(0, 119, 181, 0.1); /* Light blue background on hover */
+  border-color: #005f91;
+  transform: scale(1.03);
+  box-shadow: 0 2px 8px rgba(0, 119, 181, 0.2);
+}
+
+/* Disabled button state */
+.MuiButton-outlined.Mui-disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Icon styling */
+.MuiSvgIcon-root {
+  font-size: 1.5rem;
+  margin-right: 8px;
+}
+
+/* Mobile optimization */
+@media (max-width: 600px) {
+  .social-auth-container {
+    padding: 12px;
+    margin-top: 16px;
+  }
+
+  .social-buttons {
+    max-width: 100%;
+  }
+
+  .MuiButton-outlined {
+    padding: 10px 12px;
+    font-size: 0.95rem;
+  }
+
+  .MuiTypography-body1 {
+    font-size: 0.9rem;
+  }
+
+  .MuiSvgIcon-root {
+    font-size: 1.3rem;
+  }
+}

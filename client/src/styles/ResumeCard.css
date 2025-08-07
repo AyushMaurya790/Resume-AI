@@ -1,0 +1,265 @@
+/* Card Container */
+.resume-card {
+  position: relative;
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+}
+
+/* Header Section */
+.card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.resume-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background-color: rgba(62, 107, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+}
+
+.resume-title h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+  color: #1e293b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+
+.resume-date {
+  font-size: 12px;
+  color: #64748b;
+  margin: 4px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.card-menu-btn {
+  margin-left: auto;
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #64748b;
+  cursor: pointer;
+  padding: 4px 8px;
+  line-height: 1;
+}
+
+.card-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  padding: 8px 0;
+  min-width: 150px;
+}
+
+.card-menu button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 16px;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 14px;
+  color: #334155;
+  cursor: pointer;
+}
+
+.card-menu button:hover {
+  background-color: #f8fafc;
+}
+
+.card-menu .delete-btn {
+  color: #ef4444;
+}
+
+/* Template Preview */
+.template-preview {
+  height: 120px;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.preview-content {
+  padding: 16px;
+  color: #1e293b;
+}
+
+.preview-name {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+
+.preview-title {
+  font-size: 14px;
+  margin: 0;
+  opacity: 0.8;
+}
+
+.template-badge {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #3e6bff;
+}
+
+/* Footer Section */
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.resume-tags {
+  display: flex;
+  gap: 6px;
+  max-width: 60%;
+}
+
+.tag {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  background-color: #f1f5f9;
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: #64748b;
+  white-space: nowrap;
+}
+
+.tag-more {
+  font-size: 11px;
+  color: #64748b;
+  align-self: center;
+}
+
+.resume-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.score-badge {
+  --score-color: #3e6bff;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--score-color);
+  background-color: rgba(var(--score-color), 0.1);
+  padding: 4px 8px;
+  border-radius: 20px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 4px;
+}
+
+.action-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.analyze-btn {
+  background-color: rgba(62, 107, 255, 0.1);
+  color: #3e6bff;
+}
+
+.cover-letter-btn {
+  background-color: rgba(255, 62, 62, 0.1);
+  color: #ff3e3e;
+}
+
+/* Hover Actions */
+.hover-actions {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 8px;
+}
+
+.hover-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: white;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #64748b;
+  transition: all 0.2s;
+}
+
+.hover-btn:hover {
+  transform: scale(1.1);
+}
+
+.edit-btn:hover {
+  color: #3e6bff;
+  background-color: rgba(62, 107, 255, 0.1);
+}
+
+.download-btn:hover {
+  color: #10b981;
+  background-color: rgba(16, 185, 129, 0.1);
+}
+
+.share-btn:hover {
+  color: #f59e0b;
+  background-color: rgba(245, 158, 11, 0.1);
+}
+
+/* Text Colors */
+.text-red {
+  color: #ff3e3e;
+}
+
+.text-blue {
+  color: #3e6bff;
+}

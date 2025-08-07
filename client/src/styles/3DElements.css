@@ -1,0 +1,47 @@
+/* SharedStyles.css */
+
+/* Base styles for all canvas containers */
+.floating-orbs,
+.particles-canvas {
+  width: 100%;
+  height: 100vh; /* Full viewport height for immersive effect */
+  position: relative;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* Ensure canvas fills its container */
+canvas {
+  display: block; /* Remove default inline spacing */
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* FloatingOrbs specific styles */
+.floating-orbs {
+  background: #000; /* Black background for contrast with colorful orbs */
+}
+
+/* BackgroundParticles specific styles */
+.particles-canvas {
+  background: linear-gradient(180deg, #0a0a23, #1a1a40); /* Cosmic gradient for starfield */
+  position: fixed; /* Fixed positioning for background effect */
+  top: 0;
+  left: 0;
+  z-index: -1; /* Place behind other content */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .floating-orbs,
+  .particles-canvas {
+    height: 50vh; /* Reduce height on mobile for better usability */
+  }
+}
+
+/* Optional: Ensure no scrollbars interfere with canvas */
+body {
+  margin: 0;
+  overflow: hidden; /* Prevent scrollbars from canvas overflow */
+}
