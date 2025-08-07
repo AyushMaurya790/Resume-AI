@@ -1,24 +1,16 @@
-import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, OAuthProvider } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
-import { getStorage } from 'firebase/storage';
+const admin = require('firebase-admin');
 
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "your-app.firebaseapp.com",
-  projectId: "your-app",
-  storageBucket: "your-app.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "1:123456789:web:abcdef123456"
+const serviceAccount = {
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+  clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const storage = getStorage(app);
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
 
-// Auth providers
-const googleProvider = new GoogleAuthProvider();
-const linkedinProvider = new OAuthProvider('oidc.linkedin');
+const db = admin.firestore();
+const auth = admin.auth();
 
-export { auth, db, storage, googleProvider, linkedinProvider };
+module.exports = { db, auth };
