@@ -1,184 +1,121 @@
-/* src/styles/SignupStyles.css */
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  margin: 0;
+  padding: 0;
+}
 
-/* Root container for the signup page */
-.min-h-screen {
+.signup-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #1e3a8a, #7f1d1d); /* Matches component's blue-900 to red-900 gradient */
-  padding: 20px;
 }
 
-/* Card styling for the signup form */
-.bg-white {
-  width: 100%;
-  max-width: 420px;
-  padding: 32px;
-  border-radius: 16px;
-  background: #ffffff;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  transition: transform 0.4s ease, box-shadow 0.4s ease;
-}
-
-.bg-white:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.25);
-}
-
-/* Title styling */
-.text-3xl {
+.signup-box {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  width: 350px;
   text-align: center;
-  margin-bottom: 24px;
-  font-family: 'Inter', sans-serif;
-  font-weight: 700;
-  color: #1e40af; /* Slightly darker blue for contrast */
 }
 
-/* Error message */
-.text-red-500 {
-  text-align: center;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.9rem;
-  margin-bottom: 16px;
+.signup-box h2 {
+  margin-bottom: 20px;
+  color: #333;
 }
 
-/* Form styling */
-.space-y-4 {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-/* Form labels */
-.text-sm {
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
-  color: #374151;
-  margin-bottom: 8px;
-}
-
-/* Input fields */
-input {
+.signup-box input {
   width: 100%;
   padding: 12px;
-  border: 1px solid #d1d5db;
+  margin: 8px 0;
+  border: 1px solid #ddd;
   border-radius: 8px;
-  font-family: 'Inter', sans-serif;
-  font-size: 1rem;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  font-size: 14px;
 }
 
-input:focus {
-  outline: none;
-  border-color: #3e6bff; /* Matches App.js primary color */
-  box-shadow: 0 0 0 3px rgba(62, 107, 255, 0.2);
+.btn-primary {
+  width: 100%;
+  padding: 12px;
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
 }
 
-/* Buttons */
-button {
+.btn-primary:hover {
+  background: #45a049;
+}
+
+.divider {
+  margin: 20px 0;
+  font-size: 12px;
+  color: #777;
+  position: relative;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  position: absolute;
+  width: 40%;
+  height: 1px;
+  background: #ddd;
+  top: 50%;
+}
+
+.divider::before {
+  left: 0;
+}
+
+.divider::after {
+  right: 0;
+}
+
+.btn-google,
+.btn-linkedin,
+.btn-otp {
   width: 100%;
   padding: 12px;
   border-radius: 8px;
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 1rem;
-  text-transform: none;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-}
-
-/* Email/OTP button */
-.bg-red-600 {
-  background: #ff3e3e; /* Matches App.js secondary color */
-  color: #ffffff;
-}
-
-.bg-red-600:hover {
-  background: #dc2626;
-  transform: scale(1.05);
-}
-
-/* Google Sign-In button */
-.bg-blue-600 {
-  background: #3e6bff; /* Matches App.js primary color */
-  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  margin: 8px 0;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.bg-blue-600:hover {
-  background: #2a4bff;
-  transform: scale(1.05);
+.btn-google {
+  background: #fff;
+  border: 1px solid #ddd;
 }
 
-/* Guest Mode button */
-.bg-gray-200 {
-  background: #e5e7eb;
-  color: #1f2937;
-}
-
-.bg-gray-200:hover {
-  background: #d1d5db;
-  transform: scale(1.05);
-}
-
-/* Social buttons container */
-.space-y-4.mt-6 {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-top: 24px;
-}
-
-/* Google SVG icon */
-.w-5 {
+.btn-google img {
   width: 20px;
-  height: 20px;
-  margin-right: 8px;
+  margin-right: 10px;
 }
 
-/* Footer link */
-.text-sm.text-gray-600 {
-  text-align: center;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.875rem;
-  color: #4b5563;
-  margin-top: 24px;
+.btn-linkedin {
+  background: #0077B5;
+  color: white;
 }
 
-.text-blue-600 {
-  color: #3e6bff;
-  text-decoration: none;
-  font-weight: 500;
+.btn-linkedin img {
+  width: 20px;
+  margin-right: 10px;
+  filter: brightness(0) invert(1);
 }
 
-.text-blue-600:hover {
-  text-decoration: underline;
+.btn-otp {
+  background: #FF9800;
+  color: white;
 }
 
-/* Mobile optimization */
-@media (max-width: 600px) {
-  .min-h-screen {
-    padding: 16px;
-  }
-
-  .bg-white {
-    padding: 24px;
-    max-width: 100%;
-  }
-
-  .text-3xl {
-    font-size: 2rem;
-  }
-
-  button {
-    padding: 10px;
-    font-size: 0.95rem;
-  }
-
-  input {
-    padding: 10px;
-    font-size: 0.95rem;
-  }
+.login-link {
+  margin-top: 15px;
+  font-size: 14px;
 }

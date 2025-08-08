@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { auth } from './firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -12,7 +12,7 @@ import Footer from './components/shared/Footer';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import AdminProtectedRoute from './components/auth/AdminProtectedRoute';
 
-// Page Components
+// Pages
 import Home from './pages/Home';
 import Builder from './pages/Builder';
 import Dashboard from './pages/Dashboard';
@@ -25,19 +25,17 @@ import Admin from './pages/Admin';
 import Blog from './pages/Blog';
 import NotFound from './pages/NotFound';
 
-// Context Providers
+// Contexts
 import { AuthProvider } from './context/AuthContext';
 import { ResumeProvider } from './context/ResumeContext';
 import { PaymentProvider } from './context/PaymentContext';
 
+// MUI Theme
 const theme = createTheme({
   palette: {
     primary: { main: '#3e6bff' },
     secondary: { main: '#ff3e3e' },
-    background: {
-      default: '#f8fafc',
-      paper: '#ffffff',
-    },
+    background: { default: '#f8fafc', paper: '#ffffff' },
   },
   typography: {
     fontFamily: '"Inter", "Helvetica", "Arial", sans-serif',
@@ -88,7 +86,7 @@ const App = () => {
         display: 'flex', justifyContent: 'center', alignItems: 'center',
         height: '100vh', backgroundColor: '#f8fafc'
       }}>
-        <ThreeDots height="80" width="80" radius="9" color="#3e6bff" ariaLabel="three-dots-loading" visible={true} />
+        <ThreeDots height="80" width="80" radius="9" color="#3e6bff" ariaLabel="three-dots-loading" visible />
       </div>
     );
   }
@@ -99,11 +97,17 @@ const App = () => {
       <AuthProvider value={{ user, isAdmin }}>
         <ResumeProvider>
           <PaymentProvider>
-            <Router>
+            <BrowserRouter
+              future={{
+                v7_startTransition: true,
+                v7_relativeSplatPath: true,
+              }}
+            >
               <div className="app-container">
                 <Navbar />
                 <main className="main-content">
                   <Routes>
+                    {/* Public Routes */}
                     <Route path="/" element={<Home />} />
                     <Route path="/templates" element={<Templates />} />
                     <Route path="/pricing" element={<Pricing />} />
@@ -112,12 +116,14 @@ const App = () => {
                     <Route path="/signup" element={user ? <Navigate to="/dashboard" /> : <Signup />} />
                     <Route path="/otp-verify" element={<OtpVerification />} />
 
+                    {/* Protected Routes */}
                     <Route element={<ProtectedRoute />}>
                       <Route path="/builder" element={<Builder />} />
                       <Route path="/builder/:resumeId" element={<Builder />} />
                       <Route path="/dashboard" element={<Dashboard />} />
                     </Route>
 
+                    {/* Admin Routes */}
                     <Route element={<AdminProtectedRoute />}>
                       <Route path="/admin" element={<Admin />} />
                       <Route path="/admin/users" element={<Admin tab="users" />} />
@@ -126,12 +132,13 @@ const App = () => {
                       <Route path="/admin/templates" element={<Admin tab="templates" />} />
                     </Route>
 
+                    {/* 404 */}
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </main>
                 <Footer />
               </div>
-            </Router>
+            </BrowserRouter>
           </PaymentProvider>
         </ResumeProvider>
       </AuthProvider>
