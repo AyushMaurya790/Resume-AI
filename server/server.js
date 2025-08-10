@@ -31,12 +31,14 @@ const authRoutes = require('./routes/authRoutes');
 const resumeRoutes = require('./routes/resumeRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const aiRoutes = require('./routes/aiRoutes');
 
 // Routes Use
 app.use('/api/auth', authRoutes);
 app.use('/api/resume', resumeRoutes);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/ai', require('./routes/aiRoutes'));
 
 // ✅ OpenAI Haiku API (unchanged)
 app.post('/api/haiku', async (req, res) => {
@@ -97,49 +99,24 @@ app.post('/api/huggingface', async (req, res) => {
 
     console.log(`Attempting HuggingFace API request with model: ${process.env.HF_MODEL}`);
 
-    // Fallback model if primary model fails
-    const models = [process.env.HF_MODEL, 'distilgpt2']; // Fallback to distilgpt2
-    let response;
-    let lastError;
-
-    for (const model of models) {
-      console.log(`Trying model: ${model}`);
-      try {
-        response = await axios.post(
-          `https://api-inference.huggingface.co/models/${model}`,
-          {
-            inputs: prompt,
-            parameters: {
-              max_length: 100,
-              return_full_text: false,
-            },
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${process.env.HF_API_KEY}`,
-              'Content-Type': 'application/json',
-            },
-            timeout: 30000,
-          }
-        );
-        console.log(`Success with model: ${model}`);
-        break; // Exit loop on success
-      } catch (err) {
-        lastError = err;
-        console.error(`Failed with model ${model}:`, {
-          message: err.message,
-          status: err.response?.status,
-          response: err.response?.data,
-        });
-        if (err.response?.status !== 404) {
-          throw err; // Throw non-404 errors immediately
-        }
+    // Use only the specified model
+    const response = await axios.post(
+      `https://api-inference.huggingface.co/models/${process.env.HF_MODEL}`,
+      {
+        inputs: prompt,
+        parameters: {
+          max_length: 100,
+          return_full_text: false,
+        },
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.HF_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        timeout: 30000,
       }
-    }
-
-    if (!response) {
-      throw lastError; // Throw the last error if all models fail
-    }
+    );
 
     // Check if response data is valid
     if (response.data && Array.isArray(response.data) && response.data.length > 0) {
@@ -156,7 +133,7 @@ app.post('/api/huggingface', async (req, res) => {
     });
 
     if (error.response?.status === 404) {
-      return res.status(404).json({ message: 'Model not found or inaccessible. Check model ID or access permissions.' });
+      return res.status(404).json({ message: `Model "${process.env.HF_MODEL}" not found or inaccessible. Check model ID or access permissions.` });
     }
     if (error.response?.status === 429) {
       return res.status(429).json({ message: 'HuggingFace API rate limit exceeded. Try again later or upgrade your plan.' });
@@ -178,6 +155,43 @@ app.get('/', (req, res) => {
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: 'Something broke!' });
+});
+
+// Google Gaminai
+// Google Gemini AI
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+
+// Initialize Gemini API
+if (!process.env.GOOGLE_API_KEY) {
+  console.error("❌ GOOGLE_API_KEY not set in environment variables");
+}
+const geminiAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
+
+// Gemini API Route
+app.post("/api/gemini", async (req, res) => {
+  try {
+    const { prompt } = req.body;
+
+    if (!prompt || typeof prompt !== "string") {
+      return res.status(400).json({ message: "Prompt is required and must be a string" });
+    }
+
+    // Select model (use the latest stable)
+    const model = geminiAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+
+    const result = await model.generateContent(prompt);
+
+    res.json({
+      prompt,
+      response: result.response.text(),
+    });
+  } catch (error) {
+    console.error("❌ Gemini API Error:", {
+      message: error.message,
+      response: error.response?.data,
+    });
+    res.status(500).json({ message: "Gemini API request failed", error: error.message });
+  }
 });
 
 const PORT = process.env.PORT || 5000;

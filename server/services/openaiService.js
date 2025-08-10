@@ -1,5 +1,7 @@
 const OpenAI = require('openai');
+//const { resumePromptGenerator, coverLetterPromptGenerator } = require('../utils/promptUtils');
 const { resumePromptGenerator, coverLetterPromptGenerator } = require('../utils/promptUtils');
+
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY

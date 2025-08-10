@@ -21,14 +21,12 @@ const generateResume = async (req, res) => {
       experience = [],
       skills = [],
       education = [],
-      targetRole = title
+      targetRole = title,
     } = payload;
 
-    // Build instruction prompt that asks model to return valid JSON only
     const prompt = `
-You are a professional resume writer. 
-Create an ATS-friendly, concise resume JSON for the candidate described below.
-Return ONLY valid JSON (no extra commentary). The JSON schema must be:
+You are a resume writer. Create an ATS-friendly resume in JSON format.
+Return ONLY valid JSON (no text, comments, or markdown). Schema:
 
 {
   "name": string,
@@ -41,51 +39,78 @@ Return ONLY valid JSON (no extra commentary). The JSON schema must be:
   "education": [
     { "degree": string, "institute": string, "year": string }
   ],
-  "keywords": [string]  // keywords relevant for ATS matching
+  "keywords": [string]
 }
 
-Candidate data:
+Candidate:
 Name: ${name}
-Current title: ${title}
+Title: ${title}
 Target role: ${targetRole}
-Skills: ${skills.length ? skills.join(', ') : 'Not provided'}
-Education: ${education.length ? JSON.stringify(education) : 'Not provided'}
-Experience entries: ${experience.length ? JSON.stringify(experience) : 'Not provided'}
+Skills: ${skills.length ? skills.join(', ') : 'None'}
+Education: ${education.length ? JSON.stringify(education) : 'None'}
+Experience: ${experience.length ? JSON.stringify(experience) : 'None'}
 
-Make summary 2-3 sentences focusing on achievements and metrics if possible.
-Choose keywords that recruiters would search for (return as array).
-Use short action-oriented bullets for experiences.
-Make output compact and valid JSON.
+Instructions:
+- Summary: 2-3 sentences with achievements.
+- Keywords: ATS-relevant terms as array.
+- Bullets: Short, action-oriented.
+- Output: Valid JSON only.
     `.trim();
 
-    const modelOutput = await callHF(prompt, { max_new_tokens: 600, temperature: 0.3 });
+    console.log('Prompt sent to callHF:', prompt);
+    const modelOutput = await callHF(prompt, { max_new_tokens: 300, temperature: 0.2 });
+    console.log('Raw model output:', modelOutput);
 
-    // Model should return JSON - try to parse
     let parsed;
     try {
       parsed = JSON.parse(modelOutput);
     } catch (e) {
-      // If model returned extra text, try to extract first JSON block
-      const jsonMatch = modelOutput.match(/(\{[\s\S]*\})/);
+      const jsonMatch = modelOutput.match(/\{[\s\S]*?\}/);
       if (jsonMatch) {
-        parsed = JSON.parse(jsonMatch[1]);
+        try {
+          parsed = JSON.parse(jsonMatch[0]);
+        } catch (innerErr) {
+          console.error('JSON parsing error:', innerErr.message, 'Raw output:', modelOutput);
+          return res.status(200).json({
+            ok: false,
+            raw: modelOutput,
+            message: 'Model output is not valid JSON',
+          });
+        }
       } else {
-        // fallback: return raw text
-        return res.status(200).json({ ok: false, raw: modelOutput, message: 'Model output not valid JSON' });
+        console.error('No JSON block found in output:', modelOutput);
+        return res.status(200).json({
+          ok: false,
+          raw: modelOutput,
+          message: 'Model output is not valid JSON',
+        });
       }
     }
 
     return res.status(200).json({ ok: true, resume: parsed });
   } catch (err) {
-    console.error('generateResume error', err.message || err);
-    return res.status(500).json({ ok: false, error: 'Failed to generate resume' });
+    console.error('generateResume error:', {
+      message: err.message,
+      stack: err.stack,
+    });
+    let errorMessage = 'Failed to generate resume';
+    if (err.message.includes('Model not found') || err.message.includes('All models failed')) {
+      errorMessage = 'Hugging Face model not found or inaccessible. Check HF_MODEL in .env or your access permissions.';
+    } else if (err.message.includes('API key')) {
+      errorMessage = 'Invalid Hugging Face API key. Verify HF_API_KEY in .env.';
+    } else if (err.message.includes('rate limit')) {
+      errorMessage = 'Hugging Face API rate limit exceeded. Try again later.';
+    } else {
+      errorMessage = `Failed to generate resume: ${err.message || 'Unknown error'}`;
+    }
+    return res.status(500).json({ ok: false, error: errorMessage });
   }
 };
 
 /**
  * POST /api/ai/ats-check
  * body: {
- *   resumeText: string  OR resumeFields: {...}, 
+ *   resumeText: string OR resumeFields: {...},
  *   jobDescription: string
  * }
  * returns {score: number 0-100, missingKeywords: [string], suggestions: [string]}
@@ -95,18 +120,18 @@ const atsCheck = async (req, res) => {
     const { resumeText = '', resumeFields = null, jobDescription = '' } = req.body;
     if (!jobDescription) return res.status(400).json({ ok: false, error: 'jobDescription required' });
 
-    // Build prompt: compare resume and job description, return JSON
     const resumeForPrompt = resumeFields ? JSON.stringify(resumeFields) : resumeText;
 
     const prompt = `
-You are an expert recruiter and ATS consultant. Compare the candidate resume below with the Job Description.
-Return ONLY valid JSON with fields:
+You are an ATS consultant. Compare the resume with the Job Description.
+Return ONLY valid JSON (no text or markdown):
+
 {
-  "score": number, // 0-100
-  "matchPercentage": number, // synonyms allowed but similar to score
+  "score": number,
+  "matchPercentage": number,
   "missingKeywords": [string],
   "topMatchedKeywords": [string],
-  "suggestions": [string] // actionable suggestions for resume improvement (3-6 items)
+  "suggestions": [string]
 }
 
 Job Description:
@@ -116,28 +141,59 @@ Resume:
 ${resumeForPrompt}
 
 Instructions:
-- Compute score 0-100 based on keyword match, role fit, and formatting suggestions.
-- List missing keywords that appear in JD but not in resume.
-- Provide short actionable suggestions tailored to the resume (use bullets).
-- Return valid JSON only.
+- Score: 0-100 based on keyword match and role fit.
+- Missing keywords: Terms in JD but not in resume.
+- Suggestions: 3-6 actionable improvements.
+- Output: Valid JSON only.
     `.trim();
 
-    const modelOutput = await callHF(prompt, { max_new_tokens: 400, temperature: 0.2 });
+    console.log('Prompt sent to callHF:', prompt);
+    const modelOutput = await callHF(prompt, { max_new_tokens: 300, temperature: 0.2 });
+    console.log('Raw model output:', modelOutput);
 
-    // try parse JSON
     let parsed;
     try {
       parsed = JSON.parse(modelOutput);
     } catch (e) {
-      const jsonMatch = modelOutput.match(/(\{[\s\S]*\})/);
-      if (jsonMatch) parsed = JSON.parse(jsonMatch[1]);
-      else return res.status(200).json({ ok: false, raw: modelOutput, message: 'Model output not valid JSON' });
+      const jsonMatch = modelOutput.match(/\{[\s\S]*?\}/);
+      if (jsonMatch) {
+        try {
+          parsed = JSON.parse(jsonMatch[0]);
+        } catch (innerErr) {
+          console.error('JSON parsing error:', innerErr.message, 'Raw output:', modelOutput);
+          return res.status(200).json({
+            ok: false,
+            raw: modelOutput,
+            message: 'Model output is not valid JSON',
+          });
+        }
+      } else {
+        console.error('No JSON block found in output:', modelOutput);
+        return res.status(200).json({
+          ok: false,
+          raw: modelOutput,
+          message: 'Model output is not valid JSON',
+        });
+      }
     }
 
     return res.status(200).json({ ok: true, result: parsed });
   } catch (err) {
-    console.error('atsCheck error', err.response?.data || err.message || err);
-    return res.status(500).json({ ok: false, error: 'Failed to run ATS check' });
+    console.error('atsCheck error:', {
+      message: err.message,
+      stack: err.stack,
+    });
+    let errorMessage = 'Failed to run ATS check';
+    if (err.message.includes('Model not found') || err.message.includes('All models failed')) {
+      errorMessage = 'Hugging Face model not found or inaccessible. Check HF_MODEL in .env or your access permissions.';
+    } else if (err.message.includes('API key')) {
+      errorMessage = 'Invalid Hugging Face API key. Verify HF_API_KEY in .env.';
+    } else if (err.message.includes('rate limit')) {
+      errorMessage = 'Hugging Face API rate limit exceeded. Try again later.';
+    } else {
+      errorMessage = `Failed to run ATS check: ${err.message || 'Unknown error'}`;
+    }
+    return res.status(500).json({ ok: false, error: errorMessage });
   }
 };
 
